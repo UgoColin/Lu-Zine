@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, shallowRef, watch } from 'vue'
+import { RouterLink } from 'vue-router'
 import cookLogo from '../../assets/branding/logo.svg'
 
 type SubNavItem = {
@@ -24,7 +25,7 @@ const currentYear = computed(() =>
 const navItems = shallowRef<NavItem[]>([
   {
     label: 'Accueil',
-    href: '#',
+    href: '/',
     section: 'mise en bouche',
     links: [],
     tone: 'bg-orange text-on-orange border-orange/45',
@@ -36,10 +37,10 @@ const navItems = shallowRef<NavItem[]>([
     href: '#',
     section: 'branding & identités',
     links: [
-      { label: 'Crazy Crockery', href: '#' },
-      { label: 'Atelier Marée', href: '#' },
-      { label: 'La Ferme Urbaine', href: '#' },
-      { label: 'Core Synergy', href: '#' },
+      { label: 'Crazy Crockery', href: '/projets/crazy-crockery' },
+      { label: 'Atelier Marée', href: '/projets/atelier-maree' },
+      { label: 'La Ferme Urbaine', href: '/projets/la-ferme-urbaine' },
+      { label: 'Core Synergy', href: '/projets/core-synergy' },
     ],
     tone: 'bg-bleu-clair text-on-bleu-clair border-bleu-clair/45',
     chipTone: 'bg-on-bleu-clair/10 border-on-bleu-clair/15 text-on-bleu-clair',
@@ -99,6 +100,10 @@ const navItems = shallowRef<NavItem[]>([
 
 const isMenuOpen = shallowRef(false)
 const isVisible = shallowRef(false)
+const isHeaderHidden = shallowRef(false)
+
+let lastScrollY = 0
+let ticking = false
 
 function formatMenuLabel(label: string) {
   if (!label.includes('&')) {
@@ -117,8 +122,51 @@ function isContactMenu(label: string) {
   return label === 'On se prend un café ?'
 }
 
+function isCategoryMenu(item: NavItem) {
+  return item.links.length > 0
+}
+
+function isInternalLink(href: string) {
+  return href.startsWith('/')
+}
+
 function toggleMenu() {
   isMenuOpen.value = !isMenuOpen.value
+}
+
+function closeMenu() {
+  isMenuOpen.value = false
+}
+
+function updateHeaderVisibility() {
+  const currentScrollY = window.scrollY
+  const scrollDelta = currentScrollY - lastScrollY
+
+  if (Math.abs(scrollDelta) < 8) {
+    return
+  }
+
+  if (currentScrollY <= 24 || isMenuOpen.value) {
+    isHeaderHidden.value = false
+    lastScrollY = currentScrollY
+    return
+  }
+
+  isHeaderHidden.value = scrollDelta > 0 && currentScrollY > 140
+  lastScrollY = currentScrollY
+}
+
+function handleScroll() {
+  if (ticking) {
+    return
+  }
+
+  ticking = true
+
+  requestAnimationFrame(() => {
+    updateHeaderVisibility()
+    ticking = false
+  })
 }
 
 watch(isMenuOpen, (open) => {
@@ -127,15 +175,23 @@ watch(isMenuOpen, (open) => {
   }
 
   document.body.style.overflow = open ? 'hidden' : ''
+  isHeaderHidden.value = false
 })
 
 onUnmounted(() => {
   if (typeof document !== 'undefined') {
     document.body.style.overflow = ''
   }
+
+  if (typeof window !== 'undefined') {
+    window.removeEventListener('scroll', handleScroll)
+  }
 })
 
 onMounted(() => {
+  lastScrollY = window.scrollY
+  window.addEventListener('scroll', handleScroll, { passive: true })
+
   requestAnimationFrame(() => {
     isVisible.value = true
   })
@@ -143,16 +199,22 @@ onMounted(() => {
 </script>
 
 <template>
-  <header class="sticky top-0 z-20 border-b border-bordeau/15 bg-beige/92 backdrop-blur-md">
+  <header
+    class="sticky top-0 z-20 border-b border-bordeau/15 bg-beige/92 backdrop-blur-md transition-transform duration-300 ease-out"
+    :class="isHeaderHidden ? '-translate-y-full' : 'translate-y-0'"
+  >
     <div class="pointer-events-none absolute inset-0">
       <div class="absolute -left-10 top-0 h-24 w-24 rounded-full bg-bleu-clair/15 blur-2xl" />
       <div class="absolute right-0 top-0 h-24 w-24 rounded-full bg-orange/12 blur-2xl" />
     </div>
 
-    <a
-      href="#"
-      class="group motion-enter hidden xl:fixed xl:left-6 xl:top-4 xl:z-30 xl:inline-flex xl:items-center xl:gap-4 xl:transition-transform xl:duration-200 xl:hover:-rotate-1"
-      :class="{ 'motion-enter-active': isVisible }"
+    <RouterLink
+      to="/"
+      class="group motion-enter hidden xl:fixed xl:left-6 xl:top-4 xl:z-30 xl:inline-flex xl:flex-col xl:items-center xl:gap-2 xl:text-center xl:transition-transform xl:duration-200 xl:hover:-rotate-1"
+      :class="[
+        { 'motion-enter-active': isVisible },
+        isHeaderHidden ? 'xl:-translate-y-[calc(100%+1.5rem)]' : 'xl:translate-y-0',
+      ]"
       style="--enter-delay: 30ms; --enter-y: -14px; --enter-duration: 720ms"
     >
       <span class="flex h-16 w-16 items-center justify-center text-bordeau">
@@ -162,13 +224,13 @@ onMounted(() => {
           class="h-11 w-auto transition-transform duration-200 group-hover:scale-105"
         />
       </span>
-      <span class="flex flex-col">
+      <span class="flex flex-col items-center">
         <span class="font-subtitle text-[2.2rem] leading-none text-bordeau">Lucie Pires</span>
         <span class="text-xs uppercase tracking-[0.28em] text-bordeau/65">
           portfolio {{ currentYear }}
         </span>
       </span>
-    </a>
+    </RouterLink>
 
     <div class="relative mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
       <div class="relative">
@@ -178,11 +240,12 @@ onMounted(() => {
           style="--enter-delay: 110ms; --enter-y: 18px; --enter-duration: 760ms"
         >
           <div class="flex items-center justify-between gap-4">
-            <a
-              href="#"
-              class="group motion-enter inline-flex items-center gap-4 transition-transform duration-200 hover:-rotate-1 xl:hidden"
+            <RouterLink
+              to="/"
+              class="group motion-enter inline-flex flex-col items-center gap-2 text-center transition-transform duration-200 hover:-rotate-1 xl:hidden"
               :class="{ 'motion-enter-active': isVisible }"
               style="--enter-delay: 60ms; --enter-y: -10px; --enter-duration: 680ms"
+              @click="closeMenu"
             >
               <span class="flex h-14 w-14 items-center justify-center text-bordeau">
                 <img
@@ -191,7 +254,7 @@ onMounted(() => {
                   class="h-9 w-auto transition-transform duration-200 group-hover:scale-105"
                 />
               </span>
-              <span class="flex flex-col">
+              <span class="flex flex-col items-center">
                 <span class="font-subtitle text-[1.9rem] leading-none text-bordeau"
                   >Lucie Pires</span
                 >
@@ -199,7 +262,7 @@ onMounted(() => {
                   portfolio {{ currentYear }}
                 </span>
               </span>
-            </a>
+            </RouterLink>
 
             <div class="hidden flex-1 lg:block" />
 
@@ -232,10 +295,22 @@ onMounted(() => {
                       '--enter-duration': '620ms',
                     }"
                   >
-                    <a
-                      :href="item.href"
-                      class="block rounded-[1.7rem] border px-4 py-4 transition-all duration-200 hover:-translate-y-1 hover:rotate-[0.45deg] hover:shadow-[0_12px_28px_rgba(109,33,57,0.1)]"
-                      :class="item.tone"
+                    <component
+                      :is="isCategoryMenu(item) ? 'div' : isInternalLink(item.href) ? RouterLink : 'a'"
+                      v-bind="
+                        isCategoryMenu(item)
+                          ? {}
+                          : isInternalLink(item.href)
+                            ? { to: item.href }
+                            : { href: item.href }
+                      "
+                      class="block rounded-[1.7rem] border px-4 py-4 transition-all duration-200"
+                      :class="[
+                        item.tone,
+                        isCategoryMenu(item)
+                          ? 'select-none'
+                          : 'hover:-translate-y-1 hover:rotate-[0.45deg] hover:shadow-[0_12px_28px_rgba(109,33,57,0.1)]',
+                      ]"
                     >
                       <div class="flex items-start justify-between gap-3">
                         <div>
@@ -275,7 +350,7 @@ onMounted(() => {
                           :class="item.dotTone"
                         />
                       </div>
-                    </a>
+                    </component>
 
                     <div
                       v-if="item.links.length"
@@ -289,15 +364,16 @@ onMounted(() => {
                       :class="item.tone"
                     >
                       <div class="flex flex-wrap gap-2">
-                        <a
+                        <component
                           v-for="subItem in item.links"
                           :key="subItem.label"
-                          :href="subItem.href"
+                          :is="isInternalLink(subItem.href) ? RouterLink : 'a'"
+                          v-bind="isInternalLink(subItem.href) ? { to: subItem.href } : { href: subItem.href }"
                           class="rounded-full border px-2.5 py-1 text-[0.62rem] uppercase tracking-[0.16em] transition-transform duration-200 hover:-translate-y-0.5"
                           :class="item.chipTone"
                         >
                           {{ subItem.label }}
-                        </a>
+                        </component>
                       </div>
                     </div>
                   </div>
@@ -337,7 +413,19 @@ onMounted(() => {
 
         <ul class="space-y-3">
           <li v-for="item in navItems" :key="item.label">
-            <a :href="item.href" class="block rounded-[1.5rem] border px-4 py-4" :class="item.tone">
+            <component
+              :is="isCategoryMenu(item) ? 'div' : isInternalLink(item.href) ? RouterLink : 'a'"
+              v-bind="
+                isCategoryMenu(item)
+                  ? {}
+                  : isInternalLink(item.href)
+                    ? { to: item.href }
+                    : { href: item.href }
+              "
+              class="block rounded-[1.5rem] border px-4 py-4"
+              :class="item.tone"
+              @click="isCategoryMenu(item) ? undefined : closeMenu()"
+            >
               <div class="flex items-start justify-between gap-3">
                 <div>
                   <span
@@ -375,15 +463,17 @@ onMounted(() => {
               </div>
 
               <div v-if="item.links.length" class="mt-3 flex flex-wrap gap-2">
-                <a
+                <component
                   v-for="subItem in item.links"
                   :key="subItem.label"
-                  :href="subItem.href"
+                  :is="isInternalLink(subItem.href) ? RouterLink : 'a'"
+                  v-bind="isInternalLink(subItem.href) ? { to: subItem.href } : { href: subItem.href }"
                   class="rounded-full border px-2.5 py-1 text-[0.65rem] uppercase tracking-[0.2em]"
                   :class="item.chipTone"
+                  @click="closeMenu"
                 >
                   {{ subItem.label }}
-                </a>
+                </component>
               </div>
 
               <div
@@ -396,7 +486,7 @@ onMounted(() => {
                     : 'mail, instagram, linkedin'
                 }}
               </div>
-            </a>
+            </component>
           </li>
         </ul>
       </nav>

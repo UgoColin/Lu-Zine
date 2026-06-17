@@ -14,11 +14,11 @@ const accentPills = shallowRef<AccentPill[]>([
     tone: 'bg-bleu-clair text-on-bleu-clair border-bleu-clair/45',
   },
   {
-    label: 'Identites visuelles',
+    label: 'Identités visuelles',
     tone: 'bg-rose text-on-rose border-rose/45',
   },
   {
-    label: 'Edition & packaging',
+    label: 'Édition & packaging',
     tone: 'bg-vert text-on-vert border-vert/45',
   },
 ])
@@ -75,13 +75,13 @@ const { isVisible } = useEntranceMotion(sectionRef, {
           :class="{ 'motion-enter-active': isVisible }"
           style="--enter-delay: 240ms; --enter-y: 18px; --enter-duration: 760ms"
         >
-          La creation graphique ne s'explique pas, elle se cuisine.
+          La création graphique ne s'explique pas, elle se cuisine.
           <span class="mt-3 block text-orange">Tout est une question de dosage.</span>
         </p>
       </div>
 
       <div
-        class="motion-enter relative flex min-h-[20rem] items-end justify-center py-2 sm:min-h-[24rem] lg:min-h-[28rem]"
+        class="motion-enter relative flex min-h-[20rem] items-center justify-center py-2 sm:min-h-[24rem] lg:min-h-[28rem]"
         :class="{ 'motion-enter-active': isVisible }"
         style="--enter-delay: 180ms; --enter-y: 24px; --enter-duration: 820ms"
       >
@@ -96,7 +96,7 @@ const { isVisible } = useEntranceMotion(sectionRef, {
         >
           <img
             :src="cookIllustration"
-            alt="Illustration d'une cheffe cuisinant ses logiciels creatifs"
+            alt="Illustration d'une cheffe cuisinant ses logiciels créatifs"
             class="h-auto w-full drop-shadow-[0_18px_30px_rgba(109,33,57,0.18)]"
           />
         </div>

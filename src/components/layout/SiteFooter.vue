@@ -11,7 +11,7 @@ type ContactLink = {
 
 const contactLinks = shallowRef<ContactLink[]>([
   {
-    label: 'Ecrire un mail',
+    label: 'Écrire un mail',
     href: 'mailto:luciepirescontact@gmail.com',
     note: 'luciepirescontact@gmail.com',
     tone: 'bg-bleu-clair text-on-bleu-clair border-bleu-clair/50',
@@ -59,14 +59,14 @@ const { isVisible } = useEntranceMotion(footerRef, {
             <div class="absolute left-0 top-0 hidden h-full w-5 bg-bleu-clair lg:block" />
 
             <div class="max-w-3xl">
-              <p class="text-xs uppercase tracking-[0.35em] text-bordeau/65">Reserver une table</p>
+              <p class="text-xs uppercase tracking-[0.35em] text-bordeau/65">Réserver une table</p>
               <h2 class="mt-3 font-title text-5xl leading-[0.9] text-bordeau sm:text-6xl">
                 Le service se termine ici,
                 <span class="block text-orange">mais la cuisine reste ouverte.</span>
               </h2>
               <p class="mt-5 max-w-2xl text-2xl leading-snug text-bordeau">
-                Envie de collaborer en brigade ou de discuter design ? Reservons un premier echange
-                autour d'un projet, d'une image de marque ou d'une mise en page a faire lever.
+                Envie de collaborer en brigade ou de discuter design ? Réservons un premier échange
+                autour d'un projet, d'une image de marque ou d'une mise en page à faire lever.
               </p>
             </div>
 
@@ -98,15 +98,15 @@ const { isVisible } = useEntranceMotion(footerRef, {
               </div>
 
               <div>
-                <p class="text-xs uppercase tracking-[0.28em] text-bordeau/60">Disponibilite</p>
+                <p class="text-xs uppercase tracking-[0.28em] text-bordeau/60">Disponibilité</p>
                 <p class="mt-3 font-subtitle text-3xl text-bordeau">Cuisine ouverte</p>
-                <p class="mt-1 text-lg">Branding, edition, packaging, digital</p>
+                <p class="mt-1 text-lg">Branding, édition, packaging, digital</p>
               </div>
 
               <div>
                 <p class="text-xs uppercase tracking-[0.28em] text-bordeau/60">Ambiance</p>
                 <p class="mt-3 font-subtitle text-3xl text-bordeau">En papier et en pixels</p>
-                <p class="mt-1 text-lg">Des systemes visuels sensibles et rigoureux</p>
+                <p class="mt-1 text-lg">Des systèmes visuels sensibles et rigoureux</p>
               </div>
             </div>
           </div>
@@ -116,21 +116,21 @@ const { isVisible } = useEntranceMotion(footerRef, {
             :class="{ 'motion-enter-active': isVisible }"
             style="--enter-delay: 260ms; --enter-y: 20px; --enter-duration: 760ms"
           >
-            <div
-              class="pointer-events-none absolute -bottom-10 -right-10 h-44 w-44 rounded-full border border-bleu-clair/30"
-            />
-            <p class="text-xs uppercase tracking-[0.35em] opacity-70">Derniere page</p>
+          <div
+            class="pointer-events-none absolute -bottom-10 -right-10 h-44 w-44 rounded-full bg-bleu-clair/10 blur-2xl"
+          />
+            <p class="text-xs uppercase tracking-[0.35em] opacity-70">Dernière page</p>
             <p class="mt-4 font-subtitle text-4xl">Au menu des futures collaborations</p>
             <ul class="mt-6 space-y-4 text-lg leading-snug">
               <li>Direction artistique 360°</li>
               <li>Design de packaging et volume</li>
-              <li>Ecosystemes digitaux et social media</li>
+              <li>Écosystèmes digitaux et social media</li>
             </ul>
 
             <div class="mt-10 rounded-[2rem] border border-bleu-clair/25 bg-bleu-clair/10 p-5">
               <p class="text-sm uppercase tracking-[0.28em] opacity-70">Signature de fin</p>
               <p class="mt-3 text-2xl leading-tight">
-                La creation graphique ne s'explique pas,
+                La création graphique ne s'explique pas,
                 <span class="text-bleu-clair">elle se cuisine.</span>
               </p>
             </div>
