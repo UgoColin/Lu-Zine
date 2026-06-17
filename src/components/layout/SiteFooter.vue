@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { shallowRef } from 'vue'
+import { shallowRef, useTemplateRef } from 'vue'
+import { useEntranceMotion } from '../../composables/useEntranceMotion'
 
 type ContactLink = {
   label: string
@@ -28,10 +29,16 @@ const contactLinks = shallowRef<ContactLink[]>([
     tone: 'bg-rose text-on-rose border-rose/50',
   },
 ])
+
+const footerRef = useTemplateRef<HTMLElement>('footerSection')
+const { isVisible } = useEntranceMotion(footerRef, {
+  rootMargin: '0px 0px -12% 0px',
+  threshold: 0.2,
+})
 </script>
 
 <template>
-  <footer class="relative mt-20 overflow-hidden bg-bordeau text-on-bordeau">
+  <footer ref="footerSection" class="relative mt-20 overflow-hidden bg-bordeau text-on-bordeau">
     <div class="pointer-events-none absolute inset-0">
       <div class="absolute left-0 top-8 h-64 w-64 rounded-full bg-bleu-clair/15 blur-3xl" />
       <div class="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-orange/15 blur-3xl" />
@@ -39,10 +46,16 @@ const contactLinks = shallowRef<ContactLink[]>([
 
     <div class="relative mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       <div
-        class="overflow-hidden rounded-[2.8rem] border border-beige/15 bg-beige/96 text-on-beige shadow-[0_30px_80px_rgba(34,12,19,0.28)]"
+        class="motion-enter overflow-hidden rounded-[2.8rem] border border-beige/15 bg-beige/96 text-on-beige shadow-[0_30px_80px_rgba(34,12,19,0.28)]"
+        :class="{ 'motion-enter-active': isVisible }"
+        style="--enter-delay: 140ms; --enter-y: 26px; --enter-duration: 820ms"
       >
         <div class="grid gap-0 lg:grid-cols-[minmax(0,1.2fr)_17rem]">
-          <div class="relative px-6 py-8 sm:px-8 sm:py-10 lg:px-10 lg:py-12">
+          <div
+            class="motion-enter relative px-6 py-8 sm:px-8 sm:py-10 lg:px-10 lg:py-12"
+            :class="{ 'motion-enter-active': isVisible }"
+            style="--enter-delay: 220ms; --enter-y: 18px; --enter-duration: 720ms"
+          >
             <div class="absolute left-0 top-0 hidden h-full w-5 bg-bleu-clair lg:block" />
 
             <div class="max-w-3xl">
@@ -59,11 +72,16 @@ const contactLinks = shallowRef<ContactLink[]>([
 
             <div class="mt-8 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
               <a
-                v-for="link in contactLinks"
+                v-for="(link, index) in contactLinks"
                 :key="link.label"
                 :href="link.href"
-                class="group rounded-[1.8rem] border px-5 py-5 transition-transform duration-200 hover:-translate-y-1 hover:rotate-[-0.5deg]"
-                :class="link.tone"
+                class="group motion-enter rounded-[1.8rem] border px-5 py-5 transition-transform duration-200 hover:-translate-y-1 hover:rotate-[-0.5deg]"
+                :class="[link.tone, { 'motion-enter-active': isVisible }]"
+                :style="{
+                  '--enter-delay': `${320 + index * 80}ms`,
+                  '--enter-y': '14px',
+                  '--enter-duration': '620ms',
+                }"
               >
                 <p class="font-subtitle text-2xl leading-none">{{ link.label }}</p>
                 <p class="mt-3 text-sm uppercase tracking-[0.2em] opacity-75">
@@ -94,7 +112,9 @@ const contactLinks = shallowRef<ContactLink[]>([
           </div>
 
           <div
-            class="relative overflow-hidden border-t border-bordeau/15 bg-bordeau px-6 py-8 text-on-bordeau lg:border-l lg:border-t-0"
+            class="motion-enter relative overflow-hidden border-t border-bordeau/15 bg-bordeau px-6 py-8 text-on-bordeau lg:border-l lg:border-t-0"
+            :class="{ 'motion-enter-active': isVisible }"
+            style="--enter-delay: 260ms; --enter-y: 20px; --enter-duration: 760ms"
           >
             <div
               class="pointer-events-none absolute -bottom-10 -right-10 h-44 w-44 rounded-full border border-bleu-clair/30"

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onUnmounted, shallowRef, watch } from 'vue'
+import { computed, onMounted, onUnmounted, shallowRef, watch } from 'vue'
 import cookLogo from '../../assets/branding/logo.svg'
 
 type SubNavItem = {
@@ -98,6 +98,7 @@ const navItems = shallowRef<NavItem[]>([
 ])
 
 const isMenuOpen = shallowRef(false)
+const isVisible = shallowRef(false)
 
 function formatMenuLabel(label: string) {
   if (!label.includes('&')) {
@@ -133,6 +134,12 @@ onUnmounted(() => {
     document.body.style.overflow = ''
   }
 })
+
+onMounted(() => {
+  requestAnimationFrame(() => {
+    isVisible.value = true
+  })
+})
 </script>
 
 <template>
@@ -144,7 +151,9 @@ onUnmounted(() => {
 
     <a
       href="#"
-      class="group hidden xl:fixed xl:left-6 xl:top-4 xl:z-30 xl:inline-flex xl:items-center xl:gap-4 xl:transition-transform xl:duration-200 xl:hover:-rotate-1"
+      class="group motion-enter hidden xl:fixed xl:left-6 xl:top-4 xl:z-30 xl:inline-flex xl:items-center xl:gap-4 xl:transition-transform xl:duration-200 xl:hover:-rotate-1"
+      :class="{ 'motion-enter-active': isVisible }"
+      style="--enter-delay: 30ms; --enter-y: -14px; --enter-duration: 720ms"
     >
       <span class="flex h-16 w-16 items-center justify-center text-bordeau">
         <img
@@ -164,12 +173,16 @@ onUnmounted(() => {
     <div class="relative mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
       <div class="relative">
         <div
-          class="rounded-[2rem] border border-bordeau/15 bg-beige/88 px-4 py-4 shadow-[0_12px_30px_rgba(109,33,57,0.05)] lg:px-5"
+          class="motion-enter rounded-[2rem] border border-bordeau/15 bg-beige/88 px-4 py-4 shadow-[0_12px_30px_rgba(109,33,57,0.05)] lg:px-5"
+          :class="{ 'motion-enter-active': isVisible }"
+          style="--enter-delay: 110ms; --enter-y: 18px; --enter-duration: 760ms"
         >
           <div class="flex items-center justify-between gap-4">
             <a
               href="#"
-              class="group inline-flex items-center gap-4 transition-transform duration-200 hover:-rotate-1 xl:hidden"
+              class="group motion-enter inline-flex items-center gap-4 transition-transform duration-200 hover:-rotate-1 xl:hidden"
+              :class="{ 'motion-enter-active': isVisible }"
+              style="--enter-delay: 60ms; --enter-y: -10px; --enter-duration: 680ms"
             >
               <span class="flex h-14 w-14 items-center justify-center text-bordeau">
                 <img
@@ -192,9 +205,11 @@ onUnmounted(() => {
 
             <button
               type="button"
-              class="inline-flex items-center gap-2 rounded-full border border-bordeau/20 bg-beige px-4 py-2 text-sm text-bordeau transition-transform duration-200 hover:-rotate-2 hover:bg-bleu-clair/40 md:hidden"
+              class="motion-enter inline-flex items-center gap-2 rounded-full border border-bordeau/20 bg-beige px-4 py-2 text-sm text-bordeau transition-transform duration-200 hover:-rotate-2 hover:bg-bleu-clair/40 md:hidden"
               :aria-expanded="isMenuOpen"
               aria-controls="site-nav-mobile"
+              :class="{ 'motion-enter-active': isVisible }"
+              style="--enter-delay: 120ms; --enter-y: -12px; --enter-duration: 680ms"
               @click="toggleMenu"
             >
               <span class="font-subtitle text-lg leading-none">Menu</span>
@@ -207,8 +222,16 @@ onUnmounted(() => {
           <div class="mt-4 hidden items-center md:flex">
             <nav class="w-full" aria-label="Navigation principale">
               <ul class="grid gap-3 md:grid-cols-2 xl:grid-cols-6">
-                <li v-for="item in navItems" :key="item.label">
-                  <div class="group relative h-full pb-5 -mb-5">
+                <li v-for="(item, index) in navItems" :key="item.label">
+                  <div
+                    class="group motion-enter relative h-full pb-5 -mb-5"
+                    :class="{ 'motion-enter-active': isVisible }"
+                    :style="{
+                      '--enter-delay': `${180 + index * 70}ms`,
+                      '--enter-y': '16px',
+                      '--enter-duration': '620ms',
+                    }"
+                  >
                     <a
                       :href="item.href"
                       class="block rounded-[1.7rem] border px-4 py-4 transition-all duration-200 hover:-translate-y-1 hover:rotate-[0.45deg] hover:shadow-[0_12px_28px_rgba(109,33,57,0.1)]"
