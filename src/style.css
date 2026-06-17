@@ -1,1 +1,89 @@
-@import "tailwindcss"
+@import 'tailwindcss';
+
+@font-face {
+  font-family: 'Cherry Chuckle';
+  src: url('./assets/fonts/cherry-chuckle.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Crispy Food';
+  src: url('./assets/fonts/crispy-food.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Barlow Condensed';
+  src: url('./assets/fonts/barlow-condensed-regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  --font-title: 'Cherry Chuckle', cursive;
+  --font-subtitle: 'Crispy Food', cursive;
+  --font-body: 'Barlow Condensed', ui-sans-serif, system-ui, sans-serif;
+
+  --color-bordeau: #6d2139;
+  --color-bleu-clair: #bad8f3;
+  --color-bleu_clair: #bad8f3;
+  --color-bleu-fonce: #81afde;
+  --color-bleu_fonce: #81afde;
+  --color-rose: #f6b6b8;
+  --color-orange: #e84920;
+  --color-beige: #f8ede5;
+  --color-vert: #d7d35f;
+  --color-vert-fonce: #878e45;
+  --color-vert_fonce: #878e45;
+
+  --color-on-bordeau: #bad8f3;
+  --color-on-bleu-clair: #6d2139;
+  --color-on-bleu_clair: #6d2139;
+  --color-on-bleu-fonce: #f8ede5;
+  --color-on-bleu_fonce: #f8ede5;
+  --color-on-rose: #e84920;
+  --color-on-orange: #f6b6b8;
+  --color-on-beige: #878e45;
+  --color-on-vert: #6d2139;
+  --color-on-vert-fonce: #f8ede5;
+  --color-on-vert_fonce: #f8ede5;
+
+  --shadow-paper: 0 18px 50px rgba(109, 33, 57, 0.08);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-beige font-body text-on-beige;
+    background-image:
+      radial-gradient(circle at top left, rgb(186 216 243 / 0.3), transparent 28%),
+      radial-gradient(circle at bottom right, rgb(232 73 32 / 0.12), transparent 24%),
+      linear-gradient(180deg, rgb(248 237 229 / 0.97), rgb(248 237 229 / 0.97));
+  }
+
+  ::selection {
+    @apply bg-bordeau text-on-bordeau;
+  }
+}
+
+@layer utilities {
+  .paper-grain {
+    background-image:
+      radial-gradient(rgb(109 33 57 / 0.05) 0.6px, transparent 0.6px),
+      radial-gradient(rgb(135 142 69 / 0.04) 0.6px, transparent 0.6px);
+    background-position:
+      0 0,
+      12px 14px;
+    background-size:
+      24px 24px,
+      28px 28px;
+  }
+}
